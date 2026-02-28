@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>For Apple</title>
+
+<meta property="og:title" content="For Apple ✨">
+<meta property="og:description" content="I made a little something for you. Open it when you have a moment.">
+<meta property="og:image" content="me.jpg">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://jheddddd.github.io/This-is-me/">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Quicksand:wght@300;600&family=Great+Vibes&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --star-gold: #f9d71c;
+            --romantic-pink: #ff4d6d;
+            --space: #020617;
+            --paper: #fffef0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: radial-gradient(circle at center, #0f172a 0%, var(--space) 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            font-family: 'Quicksand', sans-serif;
+            color: white;
+        }
+
+        #bg-stars { position: fixed; top: 0; left: 0; z-index: -1; }
+
+        .main-container { text-align: center; z-index: 10; width: 100%; max-width: 500px; transition: opacity 1s; }
+
+        .constellation-area { position: relative; width: 350px; height: 320px; margin: 0 auto; }
+
+        #line-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+
+        .constellation-line {
+            stroke: var(--star-gold);
+            stroke-width: 2.5;
+            filter: drop-shadow(0 0 8px var(--star-gold));
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawLine 1.2s forwards ease-in-out;
+        }
+
+        @keyframes drawLine { to { stroke-dashoffset: 0; } }
+
+        .star {
+            position: absolute;
+            width: 12px; height: 12px;
+            background: radial-gradient(circle, #fff 0%, rgba(255,255,255,0.2) 100%);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px white;
+            z-index: 30;
+            animation: twinkle 3s infinite ease-in-out;
+        }
+
+        .star.active {
+            background: radial-gradient(circle, var(--star-gold) 0%, #d4a373 100%);
+            box-shadow: 0 0 20px var(--star-gold);
+            transform: scale(1.4);
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.8); }
+        }
+
+        .short-message {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 220px;
+            background: #fffbe6;
+            padding: 20px;
+            border-radius: 2px;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
+            color: #333;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.3rem;
+            z-index: 100;
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+
+        .short-message.show { transform: translate(-50%, -50%) scale(1) rotate(-3deg); }
+
+        /* THE LETTER SECTION */
+        #letter-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 500;
+            opacity: 0;
+            transition: opacity 1s;
+        }
+
+        .letter-paper {
+            background: var(--paper);
+            width: 90%;
+            max-width: 450px;
+            padding: 40px;
+            color: #2c3e50;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            transform: translateY(20px);
+            transition: transform 1s;
+            position: relative;
+        }
+
+        .letter-content {
+            font-family: 'Great Vibes', cursive;
+            font-size: 1.8rem;
+            line-height: 1.4;
+            text-align: center;
+        }
+
+        .btn-continue {
+            margin-top: 30px;
+            background: #2c3e50;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            font-family: 'Quicksand';
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .heartbeat { animation: beat 1.2s infinite; }
+        @keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+        /* REVEAL OVERLAY */
+        #reveal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--space); display: none; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 1000; opacity: 0;
+            transition: opacity 1.5s;
+        }
+
+        .polaroid {
+            background: white; padding: 15px 15px 45px 15px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8); transform: scale(0.5);
+            transition: 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .polaroid.show { transform: scale(1) rotate(-2deg); }
+        .polaroid img { width: 280px; height: 350px; object-fit: cover; }
+
+        .fb-btn {
+            margin-top: 30px; background: var(--romantic-pink); color: white;
+            text-decoration: none; padding: 15px 35px; border-radius: 50px;
+            font-weight: bold; opacity: 0; transition: 1s 0.5s;
+        }
+        .fb-btn.show { opacity: 1; }
+
+        .short-message::after {
+    content: "Tap to read ⮕";
+    display: block;
+    font-size: 0.7rem;
+    font-family: 'Quicksand';
+    margin-top: 10px;
+    color: var(--romantic-pink);
+    text-transform: uppercase;
+    font-weight: bold;
+    border-top: 1px solid rgba(0,0,0,0.1);
+    padding-top: 5px;
+}
+    </style>
+</head>
+<body>
+    <canvas id="bg-stars"></canvas>
+
+    <div class="main-container" id="game-ui">
+        <div style="font-family:'Dancing Script'; font-size: 2rem; color: var(--star-gold); margin-bottom: 40px;">Connect the stars...</div>
+        <div class="constellation-area" id="heart-box">
+            <svg id="line-svg"></svg>
+            <div class="star" id="s1" style="top: 25%; left: 50%;" onclick="connect(1, 'I realized lately that I’ve let too many things go unsaid.')"></div>
+            <div class="star" id="s2" style="top: 10%; left: 75%;" onclick="connect(2, 'Being this vulnerable, I want you to know who I am.')"></div>
+            <div class="star" id="s3" style="top: 35%; left: 95%;" onclick="connect(3, 'I admire every bits of you in unnatural way.')"></div>
+            <div class="star" id="s4" style="top: 90%; left: 50%;" onclick="connect(4, 'I’m telling you this because you matter to me.')"></div>
+            <div class="star" id="s5" style="top: 35%; left: 5%;" onclick="connect(5, 'Every story that you posted left me in awe.')"></div>
+            <div class="star" id="s6" style="top: 10%; left: 25%;" onclick="connect(6, 'Even if it is complicated right now, I\'ll still confess my feelings for you.')"></div>
+            
+            <div class="short-message" id="popup-note" onclick="showLetter()">
+                "I hope this makes you smile like how you make me smile everytime I see your messages."
+            </div>
+        </div>
+        <div id="hint" style="margin-top: 40px; color: #94a3b8;"></div>
+    </div>
+
+    <div id="letter-overlay">
+        <div class="letter-paper" id="paper">
+            <div class="letter-content">
+                Dearest Apple,<br><br>
+                I've been meaning to tell you this for a while, but my courage always gets in the way. I've known you for a while and I ended up being mesmerized by your presence. I just found myself liking every post or stories you've posted.<br><br> 
+                Beyond the stars and the messages, there's a person 
+                who truly admires you.<br><br>
+                With all my sincerity...
+            </div>
+            <button class="btn-continue" onclick="triggerFinalReveal()">I know it might be awkward as hell but yea, come click me!</button>
+        </div>
+    </div>
+
+    <div id="reveal-overlay">
+        <div class="polaroid" id="final-pic">
+            <img src="download (11).jpeg" alt="Secret Admirer">
+            <div style="font-family:'Dancing Script'; color:#333; font-size:2rem; margin-top:15px; text-align:center;">It's been me! :p</div>
+        </div>
+        <a href="https://www.facebook.com/100045454593951/posts/1477836187074854/?app=fbl" class="fb-btn" id="final-btn">Curious huh?</a>
+    </div>
+
+    <script>
+        let tappedCount = 0; let lastStar = null;
+        function connect(id, message) {
+            const currentStar = document.getElementById('s' + id);
+            if (currentStar.classList.contains('active')) return;
+            currentStar.classList.add('active');
+            document.getElementById('hint').innerText = message;
+            if (lastStar) drawLine(lastStar, currentStar);
+            lastStar = currentStar; tappedCount++;
+            if (tappedCount === 6) {
+                setTimeout(() => {
+                    drawLine(currentStar, document.getElementById('s1'));
+                    document.getElementById('heart-box').classList.add('heartbeat');
+                    document.getElementById('popup-note').classList.add('show');
+                }, 1000);
+            }
+        }
+        function drawLine(s1, s2) {
+            const svg = document.getElementById('line-svg');
+            const r1 = s1.getBoundingClientRect(); const r2 = s2.getBoundingClientRect(); const pr = svg.getBoundingClientRect();
+            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            line.setAttribute("x1", r1.left + r1.width/2 - pr.left); line.setAttribute("y1", r1.top + r1.height/2 - pr.top);
+            line.setAttribute("x2", r2.left + r2.width/2 - pr.left); line.setAttribute("y2", r2.top + r2.height/2 - pr.top);
+            line.setAttribute("class", "constellation-line"); svg.appendChild(line);
+        }
+        
+        function showLetter() {
+            document.getElementById('game-ui').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('game-ui').style.display = 'none';
+                const letter = document.getElementById('letter-overlay');
+                letter.style.display = 'flex';
+                setTimeout(() => { 
+                    letter.style.opacity = '1'; 
+                    document.getElementById('paper').style.transform = 'translateY(0)';
+                }, 100);
+            }, 800);
+        }
+
+        function triggerFinalReveal() {
+            document.getElementById('letter-overlay').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('letter-overlay').style.display = 'none';
+                const ov = document.getElementById('reveal-overlay');
+                ov.style.display = 'flex';
+                setTimeout(() => { 
+                    ov.style.opacity = '1'; 
+                    document.getElementById('final-pic').classList.add('show'); 
+                    document.getElementById('final-btn').classList.add('show'); 
+                }, 100);
+            }, 1000);
+        }
+
+        const canvas = document.getElementById('bg-stars'); const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        let stars = []; for(let i=0; i<100; i++) stars.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*1.2, o:Math.random()});
+        function draw() {
+            ctx.clearRect(0,0,canvas.width, canvas.height);
+            stars.forEach(s => { ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); ctx.fillStyle = `rgba(255,255,255,${s.o})`; ctx.fill(); });
+            requestAnimationFrame(draw);
+        }
+        draw();
+    </script>
+</body>
+</html>
